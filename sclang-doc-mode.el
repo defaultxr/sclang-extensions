@@ -207,8 +207,9 @@ LIST-STR is a string representation of a list."
   "Display the appropriate documentation for the symbol at point."
   ;; If any of these fail, we still want to try the others.
   (or (ignore-errors (scl:class-desc-at-point))
-      (ignore-errors (scl:method-desc-at-point))
-      (ignore-errors (scl:method-desc-for-arglist))))
+      (ignore-errors (scl:method-desc-at-point)) ;; FIX: this is the one with problems
+   (ignore-errors (scl:method-desc-for-arglist))
+   ))
 
 ;;;###autoload
 (define-minor-mode sclang-doc-mode
@@ -221,7 +222,7 @@ LIST-STR is a string representation of a list."
     (unless (and (boundp 'sclang-post-buffer)
                  (equal sclang-post-buffer (buffer-name)))
       (make-local-variable 'eldoc-documentation-function)
-      (setq eldoc-documentation-function 'scl:minibuffer-doc)
+      (setq eldoc-documentation-function nil)
       (eldoc-mode +1)))
    ;; Deactivate mode.
    (t

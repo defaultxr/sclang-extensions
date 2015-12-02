@@ -173,7 +173,10 @@ Will return the cached value for ARGUMENTS on subsequent calls."
 (defun scl:class-of (expr)
   "Evaluate EXPR and return the class of the result."
   (unless (s-blank? expr)
-    (scl:blocking-eval-string (format "(%s).class" expr))))
+    (if (string-match "^[A-Z]" expr) ;; starts with a capital so it must be a classname
+        (when (-contains? (scl:all-classes) expr)
+          "Class")
+        (scl:blocking-eval-string (format "(%s).class" expr)))))
 
 (defun scl:ensure-non-meta-class (class)
   "Make sure that the given CLASS name is not prefixed by Meta_.
